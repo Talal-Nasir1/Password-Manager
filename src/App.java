@@ -1,5 +1,11 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -18,6 +24,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 
 public class App extends JFrame {
     private HashMap<String, String> passwordMap;
+    private static final String DATA_FILE_PATH = System.getenv("APPDATA") + "\\PasswordManagerData.txt";
 
     public App() {
         passwordMap = new HashMap<>();
@@ -25,6 +32,8 @@ public class App extends JFrame {
         setTitle("Password Manager");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        loadData();
 
         UI();
     }
@@ -39,6 +48,39 @@ public class App extends JFrame {
             password.append(charaters.charAt(index));
         }
         return password.toString();
+    }
+
+    private void saveData() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(DATA_FILE_PATH))) {
+            for (String site : passwordMap.keySet()) {
+                String password = passwordMap.get(site);
+                writer.println(site + "," + password);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error saving password data.");
+        }
+    }
+
+    private void loadData() {
+        File dataFile = new File(DATA_FILE_PATH);
+
+        if (dataFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(dataFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 2) {
+                        String site = parts[0];
+                        String password = parts[1];
+                        passwordMap.put(site, password);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error loading password data.");
+            }
+        }
     }
 
     private void UI() {
@@ -61,6 +103,7 @@ public class App extends JFrame {
 
                 if (!site.isEmpty() && !password.isEmpty()) {
                     passwordMap.put(site, password);
+                    saveData();
                     JOptionPane.showMessageDialog(null, "password saved for " + site);
                 } else {
                     JOptionPane.showMessageDialog(null, "Site and Password cannon be empty");
