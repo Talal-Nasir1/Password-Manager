@@ -1,3 +1,6 @@
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -120,7 +123,21 @@ public class App extends JFrame {
                 String storedPassword = passwordMap.get(site);
 
                 if (storedPassword != null) {
-                    JOptionPane.showMessageDialog(null, "Password for " + site + ": " + storedPassword);
+                    int option = JOptionPane.showOptionDialog(null,
+                            "Password for " + site + ": " + storedPassword,
+                            "Retrieve Password",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null,
+                            new Object[] { "OK", "Copy to Clipboard" },
+                            "OK");
+                    if (option == 1) {
+                        StringSelection copied = new StringSelection(storedPassword);
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(copied, null);
+
+                        JOptionPane.showMessageDialog(null, "Password copied to clipboard");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Pssword not found for " + site);
                 }
