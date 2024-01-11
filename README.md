@@ -16,18 +16,18 @@ A secure and user-friendly Java-based password management tool with a cool looki
     - Enter the site name and password.
     - Click on "Save Password."
 
-**Retrieving a Password:**
+- **Retrieving a Password:**
     - Enter the site name.
     - Click on "Retrieve Password."
 
-**Generating a Random Password:**
+- **Generating a Random Password:**
     - Enter the desired password length.
     - Click on "Generate Random Password."
 
-**Show/Hide Password:**
+- **Show/Hide Password:**
     - Click on the "Show Password" toggle button to reveal or hide the entered password.
 
-**Clipboard Copy:**
+- **Clipboard Copy:**
     - Retrieve a password.
     - Choose "Copy to Clipboard" when prompted.
 
